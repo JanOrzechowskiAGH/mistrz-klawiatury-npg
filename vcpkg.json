@@ -1,0 +1,16 @@
+{
+  "name" : "uieditor",
+  "version" : "1.0",
+  "dependencies" : [ {
+    "name" : "imgui",
+    "features" : [ "glfw-binding", "opengl3-binding", "docking-experimental" ]
+  }, {
+    "name" : "glfw3"
+  }, {
+    "name" : "glad"
+  }, {
+    "name" : "gtest"
+  }, {
+    "name" : "stb"
+  } ]
+}
