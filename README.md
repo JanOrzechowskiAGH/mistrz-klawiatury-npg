@@ -1,5 +1,7 @@
 # mistrz-klawiatury-npg
 
+![](https://github.com/JanOrzechowskiAGH/mistrz-klawiatury-npg/blob/main/mistrz.jpg)
+
 Wymagane (przez vcpkg):
 - glfw3
 - glad
