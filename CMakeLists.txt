@@ -4,6 +4,8 @@ project(NPG)
 set(CMAKE_CXX_STANDARD 23)
 
 set(SOURCE_FILES
+        src/savegame.cpp
+        src/savegame.cpp
         src/ImGuiBase.h
         src/ImGuiBase.cpp
         src/editor/EditorBase.h
@@ -18,6 +20,7 @@ add_executable(NPG src/main.cpp
         ${SOURCE_FILES}
         src/system/ImageLoader.cpp
         src/system/ImageLoader.h
+
 )
 
 add_executable(
