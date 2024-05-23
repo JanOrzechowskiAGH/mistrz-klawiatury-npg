@@ -20,6 +20,8 @@ add_executable(NPG src/main.cpp
         ${SOURCE_FILES}
         src/system/ImageLoader.cpp
         src/system/ImageLoader.h
+        src/stats.hpp
+        src/stats.cpp
 
 )
 
