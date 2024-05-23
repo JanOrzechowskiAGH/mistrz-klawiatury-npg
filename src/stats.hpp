@@ -6,29 +6,47 @@
 #include <utility>
 #include <vector>
 #include <fstream>
+/*
+No mam nadzieje że to działa xdd
+Myślę że wystarczy wyświtlić coś w tym stylu:
+ Userame Num_of_games Play_Time Char_per_s Avg_Errors
+*/
 
-class StatsEntry {
+class StatsEntry{
 public:
-    StatsEntry(std::string username, int num_games = 1, int num_char = 0, double playtime = 0) :
-            username_(username), num_games_(num_games), num_char_(num_games), playtime_(playtime) {}
+    StatsEntry(std::string& username, int games = 0, int num_char = 0, double playtime = 0, int backspaces = 0, int errors = 0) :
+            username_(username), games_(games), char_(num_char), playtime_(playtime), backspaces_(backspaces), errors_(errors) {}
 
     std::string getUsername() const {return username_;}
-    int getNumGames() const {return num_games_;}
-    int getNumChars() const {return num_char_;}
+    int getNumGames() const {return games_;}
+    int getNumChars() const {return char_;}
     double getPlaytime() const {return playtime_;}
-    double getCharPerS() const {return (double)num_char_/playtime_;}
+    int getBackspaces() const {return backspaces_;}
+    int getErrors() const {return errors_;}
+
+    double getCharPerS() const {return (double)char_ / playtime_;}
+    double getAvgBackspaces() const {return (double)backspaces_/games_;}
+    double getAvgErrors() const {return (double)errors_/games_;}
+
+    void add_playtime(double time){playtime_+= time;}
+    void add_chars(int number){char_+= number;}
+    void add_game_number(){games_++;}
+    void add_backspaces(int number){backspaces_+= number;}
+    void add_errors(int number){errors_+= number;}
 
 
-
-    void add_to_playtime(double time){ playtime_+= time; }
-    void add_to_chars(int number){ num_char_+= number; }
-    void add_game_number(){ num_games_++; }
 
 private:
     std::string username_;
-    int num_games_;
-    int num_char_;
+    int games_;
+    int char_;
+    int backspaces_;
+    int errors_;
     double playtime_;
 };
+
+void get_user_stats(std::vector<StatsEntry>& list, std::string& username);
+
+void get_many_users_stats(std::vector<StatsEntry>& list, std::vector<std::string>& user_list);
 
 #endif //NPG_STATS_HPP
