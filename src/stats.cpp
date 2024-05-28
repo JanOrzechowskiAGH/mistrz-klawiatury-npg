@@ -6,8 +6,9 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <filesystem>
 
-// Ogólne to trzeba zrobiś jakąś listę użytkowników
+// Ogólne to trzeba zrobiś jakąś listę użytkowników     <- Funkcja zrobiona, teraz trzeba jakoś ją użyć
 // ale to chyba bedzie tworzone w głównym kodzie gry więc na razie to tak zostawiam
 // Tutaj po prostu biorę username, load-uje to co ma zapisane w save-ach i pakuje to do listy którą ty wrzucasz
 
@@ -62,4 +63,24 @@ void sortStatsEntries(std::vector<StatsEntry>& stats, const std::string& paramet
     std::sort(stats.begin(), stats.end(), [&parameter](const StatsEntry& a, const StatsEntry& b) {
         return compareByParameter(a, b, parameter);
     });
+}
+
+void GetUserList(std::vector<std::string>& list){
+    std::string path = "../saves/";
+    for (const auto & file : std::filesystem::directory_iterator(path)) {
+        std::ifstream file_in (file.path());
+        char temp_char;
+        std::string username;
+        while ( file_in ) {
+            temp_char =  (char) file_in.get();
+            if (temp_char == '\n') {
+                list.push_back(username);
+                break;
+            }
+            else{
+                username += std::string(1, temp_char);
+            }
+        }
+        file_in.close();
+    }
 }
