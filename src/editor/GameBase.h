@@ -35,6 +35,9 @@ private:
     void RenderMainBar();
     void RenderViewPort();
     void RenderMenu();
+    void UpdateGame();
+    void RenderGame();
+    void NextWord();
 
     void Setup(std::vector<std::string>& stringDict, ...);
 
@@ -49,6 +52,10 @@ private:
     int mDictSize;
     std::vector<std::string> mCurrentDict;
     std::default_random_engine mRng;
+
+    long long mCurrentTime;
+    long long mLastTime;
+    char buffer[0x70];
 
 };
 

@@ -17,7 +17,6 @@ add_executable(NPG src/main.cpp
         src/stats.hpp
         src/stats.cpp
         src/frazy.h
-        src/frazy.cpp
 
 )
 

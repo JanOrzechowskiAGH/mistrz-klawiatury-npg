@@ -1,4 +1,5 @@
 #include "GameBase.h"
+#include "../frazy.h"
 GameBase * GameBase::sInstance = nullptr;
 
 void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
@@ -9,6 +10,7 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
     ImGuiIO& io = ImGui::GetIO();
     //io.FontGlobalScale = 2.0f;
     io.Fonts->AddFontFromFileTTF("Roboto.ttf", 26.0f);
+    memset(this->buffer, 0, 0x70);
     //ImGui::GetStyle().ScaleAllSizes(2.0f);
 
 #ifdef _DEBUG
@@ -18,14 +20,6 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
 
 }
 
-std::vector<std::string> _testVector = {
-        "makaron",
-        "rabarbar",
-        "automatyka",
-        "robotyka",
-        "EAIiIB",
-        "Tomasz Niecik"
-};
 
 void GameBase::Update() {
     //RenderMainBar();
@@ -61,6 +55,10 @@ void GameBase::RenderViewPort() {
         case MENU:
             RenderMenu();
             break;
+        case INGAME:
+            UpdateGame();
+            RenderGame();
+            break;
         default:
             break;
     }
@@ -81,6 +79,55 @@ void TextCentered(const std::string& text){
     ImGui::Text(text.c_str());
 }
 
+bool test = true;
+
+void GameBase::RenderGame() {
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f,0.5f));
+    ImGui::Begin("Game", nullptr, baseWindowFlags);
+    auto windowSize = ImGui::GetWindowSize();
+    ImGui::SetCursorPosY(windowSize.y / 3);
+    TextCentered(this->mCurrentWord.c_str());
+
+    ImGui::SetCursorPosY( 4*windowSize.y / 9);
+    ImVec2 size = {600.f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
+
+    ImGui::SetCursorPosX((windowSize.x - size.x) / 2);
+
+    ImGui::PushItemWidth((size.x));
+
+    if(test) ImGui::InputText("Input", this->buffer, 0x70);
+    else {
+        test = true;
+
+    }
+    ImGui::SetKeyboardFocusHere(-1);
+    ImGui::PopItemWidth();
+
+    ImGui::SetCursorPosY( 6*windowSize.y / 9);
+    char textBuffer[0x40];
+    snprintf(textBuffer, sizeof(textBuffer), "Czas: %.2f s", ((float)this->mCurrentTime) / 1000.0f);
+    TextCentered(textBuffer);
+
+    ImGui::End();
+
+}
+
+void GameBase::UpdateGame() {
+    if(strcmp(this->mCurrentWord.c_str(), this->buffer) == 0){
+        this->NextWord();
+    }
+}
+
+void GameBase::NextWord() {
+    test = false;
+    this->mCurrentWord = this->mCurrentDict[++this->mCurrentIndex];
+    memset(this->buffer, 0, 0x70);
+    auto time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+    auto diff = time - this->mLastTime;
+    this->mCurrentTime += diff;
+}
+
 void GameBase::RenderMenu() {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f,0.5f));
@@ -97,14 +144,13 @@ void GameBase::RenderMenu() {
     for(int i = 0; i < 3; i++)
     {
         ImGui::SetCursorPosX(cursor);
-        ImGui::Button(difficultyLabels[i], buttonSize);
+        if(ImGui::Button(difficultyLabels[i], buttonSize)){
+            this->SetDifficulty((Difficulty)i);
+            this->LoadGame();
+        }
         ImGui::SameLine();
         cursor += buttonSize.x + 30;
     }
-
-
-
-
     ImGui::End();
 }
 
@@ -116,12 +162,20 @@ void GameBase::Setup(std::vector<std::string> &stringDict, ...) {
     this->mDictSize = stringDict.size();
     this->mCurrentDict = std::vector<std::string>(this->mDictSize);
 
-    std::copy(stringDict.begin(), stringDict.end(), std::back_inserter(this->mCurrentDict));
+    for(int i = 0; i < this->mDictSize; i++){
+        this->mCurrentDict[i] = stringDict[i];
+    }
     std::shuffle(mCurrentDict.begin(), mCurrentDict.end(), this->mRng);
 }
 
 void GameBase::LoadGame() {
-
+    this->mCurrentTime = 0;
+    this->mLastTime = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+    this->Setup(phrases);
+    this->mCurrentStage = INGAME;
+    this->mCurrentWord = this->mCurrentDict[this->mCurrentIndex];
+    std::cout << this->mDictSize << std::endl;
+    std::cout << this->mCurrentWord << std::endl;
 }
 
 

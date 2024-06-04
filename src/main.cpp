@@ -1,7 +1,6 @@
 #include <iostream>
 #include "ImGuiBase.h"
 #include "editor/GameBase.h"
-#include "frazy.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -28,13 +27,6 @@ int main() {
 
     GameBase myimgui;
     myimgui.Init(window, glsl_version);
-
-    // Generowanie i losowanie hasła
-    std::vector<std::string> phrases = generatePhrases();
-    std::string filename = "baza_haseł.txt";
-    savePhrasesToFile(phrases, filename);
-    std::string randomPhrase = getRandomPhrase(phrases);
-    std::cout << "Wylosowane hasło: " << randomPhrase << std::endl;
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
