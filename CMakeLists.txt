@@ -41,3 +41,6 @@ target_link_libraries(NPG__test PRIVATE GTest::gtest GTest::gtest_main GTest::gm
 target_link_libraries(NPG__test PRIVATE glad::glad)
 target_link_libraries(NPG__test PRIVATE glfw)
 target_link_libraries(NPG__test PRIVATE imgui::imgui)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Roboto.ttf
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

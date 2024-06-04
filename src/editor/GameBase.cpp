@@ -7,6 +7,10 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
     sInstance = this;
 
     ImGuiIO& io = ImGui::GetIO();
+    //io.FontGlobalScale = 2.0f;
+    io.Fonts->AddFontFromFileTTF("Roboto.ttf", 26.0f);
+    //ImGui::GetStyle().ScaleAllSizes(2.0f);
+
 #ifdef _DEBUG
     //io.IniFilename = NULL;
    // io.LogFilename = NULL;
