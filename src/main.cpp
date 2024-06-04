@@ -1,6 +1,6 @@
 #include <iostream>
 #include "ImGuiBase.h"
-#include "editor/EditorBase.h"
+#include "editor/GameBase.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -25,7 +25,7 @@ int main() {
     glfwGetFramebufferSize(window, &screen_width, &screen_height);
     glViewport(0, 0, screen_width, screen_height);
 
-    EditorBase myimgui;
+    GameBase myimgui;
     myimgui.Init(window, glsl_version);
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();

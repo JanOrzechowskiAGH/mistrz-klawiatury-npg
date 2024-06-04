@@ -8,18 +8,12 @@ set(SOURCE_FILES
         src/savegame.cpp
         src/ImGuiBase.h
         src/ImGuiBase.cpp
-        src/editor/EditorBase.h
-        src/editor/EditorBase.cpp
-        src/system/File.cpp
-        src/system/File.h
-        src/system/FileDialogManager.cpp
-        src/system/FileDialogManager.h
+        src/editor/GameBase.h
+        src/editor/GameBase.cpp
 )
 
 add_executable(NPG src/main.cpp
         ${SOURCE_FILES}
-        src/system/ImageLoader.cpp
-        src/system/ImageLoader.h
         src/stats.hpp
         src/stats.cpp
 

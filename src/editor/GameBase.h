@@ -2,12 +2,11 @@
 #define UIEDITOR_EDITORBASE_H
 
 #include "../ImGuiBase.h"
-#include "../system/FileDialogManager.h"
 #include <iostream>
 
-class EditorBase : public ImGuiBase{
+class GameBase : public ImGuiBase{
 public:
-    static EditorBase * GetInstance() { return sInstance; }
+    static GameBase * GetInstance() { return sInstance; }
 
     void Init(GLFWwindow * window, const char * glsl_version) override;
     void Update() override;
@@ -18,7 +17,7 @@ private:
     void RenderMainBar();
     void RenderViewPort();
 
-    static EditorBase * sInstance;
+    static GameBase * sInstance;
     bool hasChanges = false;
     bool confirmingExit = false;
 };
