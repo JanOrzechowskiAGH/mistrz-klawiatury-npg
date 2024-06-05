@@ -18,15 +18,18 @@ public:
         INGAME,
         GAME_OVER,
     };
+    enum GameMode {
+        TIME,
+        SCORE,
+    };
 
-    GameBase() : mCurrentDifficulty(DIFF_EASY), mCurrentStage(MENU), mCurrentIndex(0) {}
+    GameBase() : mCurrentDifficulty(DIFF_EASY), mCurrentStage(MENU), mCurrentIndex(0), mReset(false), mGameMode(TIME) {}
 
     static inline GameBase* GetInstance() { return sInstance; }
 
     void Init(GLFWwindow * window, const char * glsl_version) override;
     void Update() override;
 
-    // __VA_ARGS__ tylko żebym pamiętał by to rozszerzać
     void SetDifficulty(Difficulty difficulty) { this->mCurrentDifficulty = difficulty; }
     void LoadGame();
 
@@ -37,7 +40,10 @@ private:
     void RenderMenu();
     void UpdateGame();
     void RenderGame();
+    void RenderGameOver();
     void NextWord();
+
+    const int requiredScore = 10;
 
     void Setup(std::vector<std::string>& stringDict, ...);
 
@@ -45,6 +51,7 @@ private:
 
 
     Difficulty mCurrentDifficulty;
+    GameMode mGameMode;
     Stage mCurrentStage;
     std::string mCurrentWord;
     int mCurrentIndex;
@@ -55,7 +62,10 @@ private:
 
     long long mCurrentTime;
     long long mLastTime;
-    char buffer[0x70];
+    char mBuffer[0x70];
+
+    bool mReset = false;
+    uint32_t mScore;
 
 };
 

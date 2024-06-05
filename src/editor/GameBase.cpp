@@ -10,7 +10,7 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
     ImGuiIO& io = ImGui::GetIO();
     //io.FontGlobalScale = 2.0f;
     io.Fonts->AddFontFromFileTTF("Roboto.ttf", 26.0f);
-    memset(this->buffer, 0, 0x70);
+    memset(this->mBuffer, 0, sizeof(this->mBuffer));
     //ImGui::GetStyle().ScaleAllSizes(2.0f);
 
 #ifdef _DEBUG
@@ -59,6 +59,9 @@ void GameBase::RenderViewPort() {
             UpdateGame();
             RenderGame();
             break;
+        case GAME_OVER:
+            RenderGameOver();
+            break;
         default:
             break;
     }
@@ -71,12 +74,19 @@ const char* difficultyLabels[] = {
         "Trudny"
 };
 
-void TextCentered(const std::string& text){
+void TextCentered(const char* fmt, ...){
+    va_list args;
+    va_start(args, fmt);
+
+    char buffer[0x100];
+    vsnprintf(buffer, sizeof(buffer), fmt, args);
+
     auto xWindow = ImGui::GetWindowSize().x;
-    auto textSize = ImGui::CalcTextSize(text.c_str()).x;
+    auto textSize = ImGui::CalcTextSize(buffer).x;
 
     ImGui::SetCursorPosX((xWindow - textSize) / 2);
-    ImGui::Text(text.c_str());
+    ImGui::Text(buffer);
+    va_end(args);
 }
 
 bool test = true;
@@ -92,40 +102,50 @@ void GameBase::RenderGame() {
     ImGui::SetCursorPosY( 4*windowSize.y / 9);
     ImVec2 size = {600.f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
 
-    ImGui::SetCursorPosX((windowSize.x - size.x) / 2);
-
-    ImGui::PushItemWidth((size.x));
-
-    if(test) ImGui::InputText("Input", this->buffer, 0x70);
-    else {
-        test = true;
-
+    if(!this->mReset) {
+        ImGui::SetCursorPosX((windowSize.x - size.x) / 2);
+        ImGui::PushItemWidth((size.x));
+        ImGui::InputText("##1", this->mBuffer, sizeof(this->mBuffer));
+        ImGui::SetKeyboardFocusHere(-1);
+        ImGui::PopItemWidth();
     }
-    ImGui::SetKeyboardFocusHere(-1);
-    ImGui::PopItemWidth();
+    else this->mReset = false;
 
     ImGui::SetCursorPosY( 6*windowSize.y / 9);
-    char textBuffer[0x40];
-    snprintf(textBuffer, sizeof(textBuffer), "Czas: %.2f s", ((float)this->mCurrentTime) / 1000.0f);
-    TextCentered(textBuffer);
+    char timeBuffer[0x20];
+    char scoreBuffer[0x20];
+    TextCentered("Czas: %.2fs", (this->mCurrentTime)/1000.0f);
+    TextCentered("Wynik: %d", this->mScore);
 
     ImGui::End();
 
 }
 
 void GameBase::UpdateGame() {
-    if(strcmp(this->mCurrentWord.c_str(), this->buffer) == 0){
+    auto time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+    this->mCurrentTime = time - this->mLastTime;
+    if(strcmp(this->mCurrentWord.c_str(), this->mBuffer) == 0){
         this->NextWord();
     }
 }
 
 void GameBase::NextWord() {
-    test = false;
+    this->mReset = true;
+
+    if(this->mCurrentIndex >= (this->mDictSize-1)){
+        this->mCurrentIndex = -1;
+        std::shuffle(this->mCurrentDict.begin(), this->mCurrentDict.end(), this->mRng);
+    }
+    this->mScore++;
+    if(this->mGameMode == TIME){
+        if(this->mScore == requiredScore){
+            this->mCurrentStage = GAME_OVER;
+        }
+    }
+
     this->mCurrentWord = this->mCurrentDict[++this->mCurrentIndex];
-    memset(this->buffer, 0, 0x70);
-    auto time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-    auto diff = time - this->mLastTime;
-    this->mCurrentTime += diff;
+
+    memset(this->mBuffer, 0, 0x70);
 }
 
 void GameBase::RenderMenu() {
@@ -154,6 +174,28 @@ void GameBase::RenderMenu() {
     ImGui::End();
 }
 
+void GameBase::RenderGameOver() {
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f,0.5f));
+    ImGui::Begin("game_over", nullptr, baseWindowFlags);
+    auto windowSize = ImGui::GetWindowSize();
+    ImGui::SetCursorPosY(windowSize.y / 3);
+    TextCentered("Koniec gry!");
+
+    if(this->mGameMode == TIME){
+        ImGui::SetCursorPosY( 4*windowSize.y / 9);
+        TextCentered("Czas: %.3f", (this->mCurrentTime/1000.0f));
+    }
+    ImVec2 buttonSize = {180.0f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
+    auto cursor = (windowSize.x - buttonSize.x) / 2;
+    ImGui::SetCursorPosX(cursor);
+    if(ImGui::Button("Menu", buttonSize)){
+        this->mCurrentStage = MENU;
+    }
+
+    ImGui::End();
+}
+
 void GameBase::Setup(std::vector<std::string> &stringDict, ...) {
     this->mCurrentStage = GameBase::LOADING;
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -170,12 +212,13 @@ void GameBase::Setup(std::vector<std::string> &stringDict, ...) {
 
 void GameBase::LoadGame() {
     this->mCurrentTime = 0;
+    this->mReset = false;
+    this->mScore = 0;
     this->mLastTime = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
     this->Setup(phrases);
     this->mCurrentStage = INGAME;
     this->mCurrentWord = this->mCurrentDict[this->mCurrentIndex];
-    std::cout << this->mDictSize << std::endl;
-    std::cout << this->mCurrentWord << std::endl;
+
 }
 
 
