@@ -3,9 +3,11 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <filesystem>
 
 void save(std::vector<Entry> list, std::string username){
     std::ofstream file_out;
+    std::filesystem::create_directory("../saves");
     std::string path = "../saves/" + username + ".savegame";
     file_out.open(path);
     file_out << username << '\n';

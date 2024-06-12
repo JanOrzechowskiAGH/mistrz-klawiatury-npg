@@ -67,6 +67,7 @@ void sortStatsEntries(std::vector<StatsEntry>& stats, const std::string& paramet
 
 void GetUserList(std::vector<std::string>& list){
     std::string path = "../saves/";
+    std::filesystem::create_directory("../saves");
     for (const auto & file : std::filesystem::directory_iterator(path)) {
         std::ifstream file_in (file.path());
         char temp_char;
