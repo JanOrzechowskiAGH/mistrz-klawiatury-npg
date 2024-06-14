@@ -81,14 +81,12 @@ void TextCentered(const char* fmt, ...){
     char buffer[0x100];
     vsnprintf(buffer, sizeof(buffer), fmt, args);
 
-    auto xWindow = ImGui::GetWindowSize().x;
     auto textSize = ImGui::CalcTextSize(buffer).x;
 
-    ImGui::SetCursorPosX((xWindow - textSize) / 2);
+    SetCentered(textSize);
     ImGui::Text(buffer);
     va_end(args);
 }
-
 bool test = true;
 
 void GameBase::RenderGame() {
@@ -103,7 +101,7 @@ void GameBase::RenderGame() {
     ImVec2 size = {600.f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
 
     if(!this->mReset) {
-        ImGui::SetCursorPosX((windowSize.x - size.x) / 2);
+        SetCentered(size.x);
         ImGui::PushItemWidth((size.x));
         ImGui::InputText("##1", this->mBuffer, sizeof(this->mBuffer));
         ImGui::SetKeyboardFocusHere(-1);
@@ -112,9 +110,7 @@ void GameBase::RenderGame() {
     else this->mReset = false;
 
     ImGui::SetCursorPosY( 6*windowSize.y / 9);
-    char timeBuffer[0x20];
-    char scoreBuffer[0x20];
-    TextCentered("Czas: %.2fs", (this->mCurrentTime)/1000.0f);
+    TextCentered("Czas: %.2fs", this->mGameMode == TIME ? (this->mCurrentTime)/1000.0f : (this->mTimeLeft)/1000.0f);
     TextCentered("Wynik: %d", this->mScore);
 
     ImGui::End();
@@ -124,6 +120,12 @@ void GameBase::RenderGame() {
 void GameBase::UpdateGame() {
     auto time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
     this->mCurrentTime = time - this->mLastTime;
+    this->mTimeLeft = timeModeTime - (this->mCurrentTime);
+    if(this->mGameMode == SCORE){
+        if(this->mTimeLeft <= 0){
+            this->mCurrentStage = GAME_OVER;
+        }
+    }
     if(strcmp(this->mCurrentWord.c_str(), this->mBuffer) == 0){
         this->NextWord();
     }
@@ -142,7 +144,6 @@ void GameBase::NextWord() {
             this->mCurrentStage = GAME_OVER;
         }
     }
-
     this->mCurrentWord = this->mCurrentDict[++this->mCurrentIndex];
 
     memset(this->mBuffer, 0, 0x70);
@@ -161,6 +162,7 @@ void GameBase::RenderMenu() {
     ImVec2 buttonSize = {180.0f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
     auto cursor = (windowSize.x - 3 * (buttonSize.x + 30)) / 2;
 
+
     for(int i = 0; i < 3; i++)
     {
         ImGui::SetCursorPosX(cursor);
@@ -168,9 +170,13 @@ void GameBase::RenderMenu() {
             this->SetDifficulty((Difficulty)i);
             this->LoadGame();
         }
-        ImGui::SameLine();
+        if(i < 2) ImGui::SameLine();
         cursor += buttonSize.x + 30;
     }
+    ImGui::PushItemWidth(600.0f);
+    SetCentered(630.0f);
+    ImGui::Combo("##tryb1", (int*)&this->mGameMode, tryby);
+    ImGui::PopItemWidth();
     ImGui::End();
 }
 
@@ -185,6 +191,10 @@ void GameBase::RenderGameOver() {
     if(this->mGameMode == TIME){
         ImGui::SetCursorPosY( 4*windowSize.y / 9);
         TextCentered("Czas: %.3f", (this->mCurrentTime/1000.0f));
+    }
+    else if(this->mGameMode == SCORE){
+        ImGui::SetCursorPosY( 4*windowSize.y / 9);
+        TextCentered("Wynik: %d", this->mScore);
     }
     ImVec2 buttonSize = {180.0f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
     auto cursor = (windowSize.x - buttonSize.x) / 2;

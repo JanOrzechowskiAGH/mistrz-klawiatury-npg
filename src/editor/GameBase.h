@@ -5,6 +5,11 @@
 #include <iostream>
 #include <random>
 
+#define SetCentered(elemSize) auto xWindow = ImGui::GetWindowSize().x; \
+    ImGui::SetCursorPosX((xWindow - elemSize) / 2);
+
+static const char tryby[] = "Czas\0Ilość";
+
 class GameBase : public ImGuiBase{
 public:
     enum Difficulty {
@@ -22,8 +27,8 @@ public:
         TIME,
         SCORE,
     };
-
-    GameBase() : mCurrentDifficulty(DIFF_EASY), mCurrentStage(MENU), mCurrentIndex(0), mReset(false), mGameMode(TIME) {}
+    
+    GameBase() : mCurrentDifficulty(DIFF_EASY), mCurrentStage(MENU), mCurrentIndex(0), mReset(false), mGameMode(TIME), mTimeLeft(0) {}
 
     static inline GameBase* GetInstance() { return sInstance; }
 
@@ -44,6 +49,7 @@ private:
     void NextWord();
 
     const int requiredScore = 10;
+    const long long timeModeTime = 20000; //ms
 
     void Setup(std::vector<std::string>& stringDict, ...);
 
@@ -66,7 +72,7 @@ private:
 
     bool mReset = false;
     uint32_t mScore;
-
+    long long mTimeLeft;
 };
 
 #endif //UIEDITOR_EDITORBASE_H
