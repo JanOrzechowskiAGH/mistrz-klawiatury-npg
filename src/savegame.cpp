@@ -54,7 +54,7 @@ void save(std::string& username, int& score){
     if(file_in){
         file_in.close();
         std::ofstream file_out;
-        file_out.open(path, std::ios::app); // append instead of overwrite
+        file_out.open(path, std::ios::app);
         file_out << score << "\n";
         file_out.close();
     }
