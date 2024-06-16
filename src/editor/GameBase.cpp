@@ -1,5 +1,6 @@
 #include "GameBase.h"
 #include "../frazy.h"
+#include "imgui.h"
 #include <chrono>
 
 GameBase * GameBase::sInstance = nullptr;
@@ -185,7 +186,7 @@ void GameBase::RenderMenu() {
     }
     ImGui::End();
 }
-
+char userName[0x100];
 void GameBase::RenderGameOver() {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f,0.5f));
@@ -208,9 +209,16 @@ void GameBase::RenderGameOver() {
     if(ImGui::Button("Menu", buttonSize)){
         this->mCurrentStage = MENU;
     }
+    auto s = (windowSize.x - 400) / 2.0f; 
+    ImGui::SetCursorPosX(s);
+    ImGui::PushItemWidth(300);
+    ImGui::InputText("##user", userName, 0x100);
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
     if(ImGui::Button("Zapisz")) {
-
+         
     }
+    ImGui::PopItemWidth();
 
     ImGui::End();
 }
