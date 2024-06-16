@@ -29,7 +29,7 @@ private:
     int games_;
 };
 
-std::vector<StatsEntry> getUsersStats(std::vector<User>& users);
+std::vector<StatsEntry> getUsersStats();
 
 bool compareStatsEntries(const StatsEntry& a, const StatsEntry& b, Comparator parameter);
 

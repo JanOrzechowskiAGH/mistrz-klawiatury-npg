@@ -5,6 +5,7 @@
 #include <iostream>
 #include <random>
 #include <chrono>
+#include "../stats.hpp"
 
 #define SetCentered(elemSize) auto xWindow = ImGui::GetWindowSize().x; \
     ImGui::SetCursorPosX((xWindow - elemSize) / 2);
@@ -23,6 +24,7 @@ public:
         LOADING,
         INGAME,
         GAME_OVER,
+        STATS
     };
     enum GameMode {
         TIME,
@@ -48,6 +50,7 @@ private:
     void RenderGame();
     void RenderGameOver();
     void NextWord();
+    void RenderStats();
 
     const int requiredScore = 10;
     const long long timeModeTime = 20000; //ms
@@ -62,6 +65,7 @@ private:
     Stage mCurrentStage;
     std::string mCurrentWord;
     int mCurrentIndex;
+    Comparator mComp;
 
     int mDictSize;
     std::vector<std::string> mCurrentDict;

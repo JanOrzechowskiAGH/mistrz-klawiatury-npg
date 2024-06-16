@@ -3,6 +3,9 @@
 #include "imgui.h"
 #include <chrono>
 #include "../savegame.h"
+#include "../stats.hpp"
+#include <string>
+#include <sstream>
 
 GameBase * GameBase::sInstance = nullptr;
 
@@ -67,6 +70,9 @@ void GameBase::RenderViewPort() {
             break;
         case GAME_OVER:
             RenderGameOver();
+            break;
+        case STATS:
+            RenderStats();
             break;
         default:
             break;
@@ -204,6 +210,12 @@ void GameBase::RenderMenu() {
         if(i < 2) ImGui::SameLine();
         cursor += buttonSize.x + 30;
     }
+
+    ImGui::SetCursorPosY(2*windowSize.y/3);
+    ImGui::SetCursorPosX((windowSize.x - buttonSize.x - 30) / 2);
+    if (ImGui::Button("Stats", buttonSize)){
+        this -> mCurrentStage = STATS;
+    }
     ImGui::End();
 }
 char userName[0x100];
@@ -286,5 +298,56 @@ void GameBase::LoadGame() {
     this->mCurrentWord = this->mCurrentDict[this->mCurrentIndex];
 }
 
+// Pierwszy raz to robiłem więc sprawdźcie to ale chyba działa
+void GameBase::RenderStats() {
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f,0.5f));
+    ImGui::Begin("Stats", nullptr, baseWindowFlags);
+    auto windowSize = ImGui::GetWindowSize();
+
+    if(ImGui::Button("Wyjdź")){
+        this->mCurrentStage = MENU;
+    }
+
+    auto cursor = windowSize.y / 9;
+    ImGui::SetCursorPosY( cursor);
+    TextCentered("Statystyki");
+
+    TextCentered("Sortuj po:");
+    static const char opcje_sort[] = "Liczba gier\0Najwyższy wynik\0Średni wynik";
+    ImGui::SetCursorPosX(  (windowSize.x/5) );
+    ImGui::Combo("##sortowanie", (int*)&this -> mComp, opcje_sort);
+
+    cursor = 3*windowSize.y / 9;
+    ImGui::SetCursorPosY( cursor );
+    std::vector<std::string> text = { "Nazwa użytkownika",
+                                      "Liczba gier",
+                                      "Najwyższy wynik",
+                                      "Średni wynik"};
+    for (int i = 0; i < 4; ++i) {
+        ImGui::SetCursorPosY( cursor);
+        ImGui::SetCursorPosX(  ((windowSize.x/16) + i*windowSize.x/4) );
+        ImGui::Text(text[i].c_str());
+    }
+
+    cursor = 4*windowSize.y / 9;
+    ImGui::SetCursorPosY( cursor );
+    std::vector<StatsEntry> users = getUsersStats();
+    sortStatsEntries(users, mComp);
+    for (const auto& user: users){
+        std::vector<std::string> user_text = { user.getUsername(),
+                                          std::to_string(user.getGameCount()),
+                                          std::to_string(user.getHighScore()),
+                                          std::to_string(user.getAvgScore())};
+        for (int i = 0; i < 4; ++i) {
+            ImGui::SetCursorPosY( cursor);
+            ImGui::SetCursorPosX(  ((windowSize.x/16) + (i*windowSize.x/4) + 30 ) );
+            ImGui::Text(user_text[i].c_str());
+        }
+
+        cursor += 30;
+    }
 
 
+    ImGui::End();
+}

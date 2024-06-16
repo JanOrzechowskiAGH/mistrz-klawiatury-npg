@@ -1,4 +1,3 @@
-#include <iostream>
 #include "stats.hpp"
 #include "savegame.h"
 #include <vector>
@@ -23,7 +22,8 @@ int StatsEntry::getHighScore() const {
     return highest;
 }
 
-std::vector<StatsEntry> getUsersStats(std::vector<User>& users){
+std::vector<StatsEntry> getUsersStats(){
+    std::vector<User> users;
     std::vector<StatsEntry> users_stats;
     load(users);
     for (const auto& user: users){
@@ -36,11 +36,13 @@ std::vector<StatsEntry> getUsersStats(std::vector<User>& users){
 bool compareStatsEntries(const StatsEntry& a, const StatsEntry& b, Comparator parameter){
     switch (parameter) {
         case GameCount:
-            return a.getGameCount() < b.getGameCount();
+            return a.getGameCount() > b.getGameCount();
         case HighScore:
-            return a.getHighScore() < b.getHighScore();
+            return a.getHighScore() > b.getHighScore();
         case AvgScore:
-            return a.getAvgScore() < b.getAvgScore();
+            return a.getAvgScore() > b.getAvgScore();
+        default:
+            return false;
     }
 }
 
