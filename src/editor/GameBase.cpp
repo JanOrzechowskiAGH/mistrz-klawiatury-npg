@@ -1,5 +1,7 @@
 #include "GameBase.h"
 #include "../frazy.h"
+#include <chrono>
+
 GameBase * GameBase::sInstance = nullptr;
 
 ImVector<ImWchar> ranges;
@@ -229,7 +231,23 @@ void GameBase::LoadGame() {
     this->mReset = false;
     this->mScore = 0;
     this->mLastTime = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-    this->Setup(phrases);
+    switch (this->mCurrentDifficulty) {
+        case DIFF_EASY:
+            this->Setup(easy_phrases);
+            break;
+        case DIFF_MEDIUM:
+            this->Setup(medium_phrases);
+            break;
+        case DIFF_HARD:
+            this->Setup(hard_phrases);
+            break;
+        default:
+            // Opcjonalnie: ustawienie domyślnego poziomu trudności lub obsługa błędu
+            this->Setup(easy_phrases);
+            break;
+    }
+
+
     this->mCurrentStage = INGAME;
     this->mCurrentWord = this->mCurrentDict[this->mCurrentIndex];
 }
