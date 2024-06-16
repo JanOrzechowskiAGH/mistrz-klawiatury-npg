@@ -72,6 +72,7 @@ private:
     char mBuffer[0x70];
 
     bool mReset = false;
+    bool mReset2 = false;
     uint32_t mScore;
     long long mTimeLeft;
 };

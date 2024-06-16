@@ -99,6 +99,11 @@ void GameBase::RenderGame() {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f,0.5f));
     ImGui::Begin("Game", nullptr, baseWindowFlags);
+
+    if(ImGui::Button("Wyjdź")){
+        this->mCurrentStage = MENU;
+    }
+
     auto windowSize = ImGui::GetWindowSize();
     ImGui::SetCursorPosY(windowSize.y / 3);
     TextCentered(this->mCurrentWord.c_str());
@@ -106,15 +111,19 @@ void GameBase::RenderGame() {
     ImGui::SetCursorPosY( 4*windowSize.y / 9);
     ImVec2 size = {600.f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
 
+
     if(!this->mReset) {
         SetCentered(size.x);
         ImGui::PushItemWidth((size.x));
         ImGui::InputText("##1", this->mBuffer, sizeof(this->mBuffer));
-        ImGui::SetKeyboardFocusHere(-1);
+        if(this->mReset2) ImGui::SetKeyboardFocusHere(-1);
         ImGui::PopItemWidth();
+        this->mReset2 = false;
     }
-    else this->mReset = false;
-
+    else {
+        this->mReset = false;
+        this->mReset2 = true;
+    }
     ImGui::SetCursorPosY( 6*windowSize.y / 9);
     TextCentered("Czas: %.2fs", this->mGameMode == TIME ? (this->mCurrentTime)/1000.0f : (this->mTimeLeft)/1000.0f);
     TextCentered("Wynik: %d", this->mScore);
