@@ -20,11 +20,8 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
     memset(this->mBuffer, 0, sizeof(this->mBuffer));
     //ImGui::GetStyle().ScaleAllSizes(2.0f);
 
-#ifdef _DEBUG
-    //io.IniFilename = NULL;
-   // io.LogFilename = NULL;
-#endif
-
+    io.IniFilename = NULL;
+    io.LogFilename = NULL;
 }
 
 
@@ -162,13 +159,20 @@ void GameBase::RenderMenu() {
     ImGui::Begin("Test", nullptr, baseWindowFlags);
     auto windowSize = ImGui::GetWindowSize();
     ImGui::SetCursorPosY(windowSize.y / 3);
-    TextCentered("Wybierz poziom trudności");
+    ImFont* font = ImGui::GetFont();
+    TextCentered("Mistrz Klawiatury");
 
-    ImGui::SetCursorPosY( 4*windowSize.y / 9);
+    ImGui::PushItemWidth(600.0f);
+    ImGui::SetCursorPosY(4*windowSize.y/9);
+    TextCentered("Tryb gry");
+    SetCentered(630.0f);
+    ImGui::Combo("##tryb1", (int*)&this->mGameMode, tryby);
+    ImGui::PopItemWidth();
     ImVec2 buttonSize = {180.0f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
     auto cursor = (windowSize.x - 3 * (buttonSize.x + 30)) / 2;
 
 
+    ImGui::SetCursorPosY( 5*windowSize.y / 9);
     for(int i = 0; i < 3; i++)
     {
         ImGui::SetCursorPosX(cursor);
@@ -179,10 +183,6 @@ void GameBase::RenderMenu() {
         if(i < 2) ImGui::SameLine();
         cursor += buttonSize.x + 30;
     }
-    ImGui::PushItemWidth(600.0f);
-    SetCentered(630.0f);
-    ImGui::Combo("##tryb1", (int*)&this->mGameMode, tryby);
-    ImGui::PopItemWidth();
     ImGui::End();
 }
 
@@ -207,6 +207,9 @@ void GameBase::RenderGameOver() {
     ImGui::SetCursorPosX(cursor);
     if(ImGui::Button("Menu", buttonSize)){
         this->mCurrentStage = MENU;
+    }
+    if(ImGui::Button("Zapisz") {
+
     }
 
     ImGui::End();
