@@ -11,3 +11,5 @@ CTestTestfile.cmake
 _deps
 /cmake-build-debug-visual-studio
 /cmake-build-debug
+compile-flags.txt
+compile_flags.txt
