@@ -52,7 +52,4 @@ void getMultipeUsersStats(std::vector<StatsEntry>& list, std::vector<std::string
 bool compareByParameter(const StatsEntry& a, const StatsEntry& b, const std::string& parameter);
 
 void sortStatsEntries(std::vector<StatsEntry>& stats, const std::string& parameter);
-
-void GetUserList(std::vector<std::string>& list);
-
 #endif //NPG_STATS_HPP

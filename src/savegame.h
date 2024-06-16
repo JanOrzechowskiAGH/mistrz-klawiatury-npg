@@ -6,23 +6,10 @@
 #include <vector>
 #include <fstream>
 
-class Entry {
-public:
-    Entry(double elapsed_time, int backspaces, int errors, std::string word) : elapsed_time_(elapsed_time), backspaces_(backspaces), errors_(errors), word_(word) {}
-    double getTime() const { return elapsed_time_; }
-    int getBackspaces() const { return backspaces_; }
-    int getErrors() const { return errors_; }
-    std::string getWord() const { return word_; }
-private:
-    double elapsed_time_;
-    int backspaces_;
-    int errors_;
-    std::string word_;
-};
+void GetUserList(std::vector<std::string>& list);
 
+int load(std::string& username, std::string path, double& time,  int& score1, int& score2);
 
-void save(std::vector<Entry> list, std::string username);
-
-void load(std::vector<Entry>& list, std::string& username, std::string path);
+void save(std::string username, double time,  int score1, int score2);
 
 #endif //SAVEGAME_H

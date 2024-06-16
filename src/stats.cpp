@@ -64,24 +64,3 @@ void sortStatsEntries(std::vector<StatsEntry>& stats, const std::string& paramet
         return compareByParameter(a, b, parameter);
     });
 }
-
-void GetUserList(std::vector<std::string>& list){
-    std::string path = "../saves/";
-    std::filesystem::create_directory("../saves");
-    for (const auto & file : std::filesystem::directory_iterator(path)) {
-        std::ifstream file_in (file.path());
-        char temp_char;
-        std::string username;
-        while ( file_in ) {
-            temp_char =  (char) file_in.get();
-            if (temp_char == '\n') {
-                list.push_back(username);
-                break;
-            }
-            else{
-                username += std::string(1, temp_char);
-            }
-        }
-        file_in.close();
-    }
-}
