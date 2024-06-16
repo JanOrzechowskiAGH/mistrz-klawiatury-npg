@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "savegame.h"
 
 enum Comparator {
     GameCount,
@@ -28,9 +29,7 @@ private:
     int games_;
 };
 
-StatsEntry getUsersStats(std::string& username);
-
-std::vector<StatsEntry> getMultipleUsersStats(std::vector<std::string>& user_list);
+std::vector<StatsEntry> getUsersStats(std::vector<User>& users);
 
 bool compareStatsEntries(const StatsEntry& a, const StatsEntry& b, Comparator parameter);
 
