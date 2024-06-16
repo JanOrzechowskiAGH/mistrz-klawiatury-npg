@@ -8,11 +8,13 @@
 
 class User{
 public:
-    User(std::string UserName, int score) : score_(score), UserName_(std::move(UserName)) {}
-    int getScore() const { return score_; }
+    User(std::string UserName, std::vector<int> score, int gameCount) : score_(score), gameCount_(gameCount), UserName_(UserName) {}
+    std::vector<int> getScore() const { return score_; }
+    int getGameCount() const { return gameCount_; }
     std::string GetUserName () const { return UserName_; }
 private:
-    int score_;
+    std::vector<int> score_;
+    int gameCount_;
     std::string UserName_;
 };
 
