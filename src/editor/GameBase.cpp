@@ -2,6 +2,7 @@
 #include "../frazy.h"
 GameBase * GameBase::sInstance = nullptr;
 
+ImVector<ImWchar> ranges;
 void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
     if(sInstance != nullptr) throw ("Another instance of GameBase already exists!");
     ImGuiBase::Init(window, glsl_version);
@@ -9,7 +10,11 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
 
     ImGuiIO& io = ImGui::GetIO();
     //io.FontGlobalScale = 2.0f;
-    io.Fonts->AddFontFromFileTTF("Roboto.ttf", 26.0f);
+    ImFontGlyphRangesBuilder builder;
+    builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
+    builder.AddText("ąęśćółżźĄĘŚĆÓŁŻŹ");
+    builder.BuildRanges(&ranges);
+    io.Fonts->AddFontFromFileTTF("Roboto.ttf", 26.0f, nullptr, ranges.Data);
     memset(this->mBuffer, 0, sizeof(this->mBuffer));
     //ImGui::GetStyle().ScaleAllSizes(2.0f);
 
@@ -69,8 +74,8 @@ void GameBase::RenderViewPort() {
 }
 
 const char* difficultyLabels[] = {
-        "Latwy",
-        "Sredni",
+        "Łatwy",
+        "Średni",
         "Trudny"
 };
 
@@ -155,8 +160,7 @@ void GameBase::RenderMenu() {
     ImGui::Begin("Test", nullptr, baseWindowFlags);
     auto windowSize = ImGui::GetWindowSize();
     ImGui::SetCursorPosY(windowSize.y / 3);
-    TextCentered("Wybierz poziom trudnosci");
-
+    TextCentered("Wybierz poziom trudności");
 
     ImGui::SetCursorPosY( 4*windowSize.y / 9);
     ImVec2 buttonSize = {180.0f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
@@ -228,7 +232,6 @@ void GameBase::LoadGame() {
     this->Setup(phrases);
     this->mCurrentStage = INGAME;
     this->mCurrentWord = this->mCurrentDict[this->mCurrentIndex];
-
 }
 
 

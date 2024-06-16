@@ -4,6 +4,7 @@
 #include "../ImGuiBase.h"
 #include <iostream>
 #include <random>
+#include <chrono>
 
 #define SetCentered(elemSize) auto xWindow = ImGui::GetWindowSize().x; \
     ImGui::SetCursorPosX((xWindow - elemSize) / 2);
