@@ -26,10 +26,6 @@ void GetUserList(std::vector<std::string>& list){
 }
 void save(std::string username, int score){
     std::filesystem::create_directory("../saves");
-                }
-            }
-            else if (line == 2) {
-                if (temp_char == '\n') {
     std::string path = "../saves/" + username + ".savegame";
     std::ofstream file_out;
     file_out.open(path);
