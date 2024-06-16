@@ -128,6 +128,16 @@ void GameBase::RenderGame() {
     TextCentered("Czas: %.2fs", this->mGameMode == TIME ? (this->mCurrentTime)/1000.0f : (this->mTimeLeft)/1000.0f);
     TextCentered("Wynik: %d", this->mScore);
 
+    ImVec2 buttonSize = ImVec2(200, 50);
+    ImVec2 buttonPos = ImVec2(center.x - buttonSize.x / 2, center.y + windowSize.y / 4 - buttonSize.y / 16); // Poprawiony buttonPos
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsMouseHoveringRect(buttonPos, ImVec2(buttonPos.x + buttonSize.x, buttonPos.y + buttonSize.y))) {
+        this->LoadGame();
+    }
+
+    ImGui::SetCursorPos(buttonPos);
+    if (ImGui::Button("Reset", buttonSize)) {
+        this->LoadGame();
+    }
     ImGui::End();
 
 }
