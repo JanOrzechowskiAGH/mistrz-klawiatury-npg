@@ -241,20 +241,24 @@ void GameBase::RenderGameOver() {
     if(ImGui::Button("Menu", buttonSize)){
         this->mCurrentStage = MENU;
     }
-    auto s = (windowSize.x - 400) / 2.0f; 
-    ImGui::SetCursorPosX(s);
-    ImGui::PushItemWidth(300);
-    ImGui::InputText("##user", userName, 0x100);
-    ImGui::SameLine();
-    ImGui::PushItemWidth(100);
-    if(ImGui::Button("Zapisz")) {
-        std::string userName_s = userName;
-        int score = (int) this->mScore;
-        save(userName_s, score);
-        this->mCurrentStage = MENU;
+    else if(this->mGameMode == SCORE) {
+        auto s = (windowSize.x - 400) / 2.0f;
+        ImGui::SetCursorPosX(s);
+        ImGui::PushItemWidth(300);
+        ImGui::InputText("##user", userName, 0x100);
+        ImGui::SameLine();
+        ImGui::PushItemWidth(100);
+        if (ImGui::Button("Zapisz")) {
+            std::string userName_s = userName;
+            if(userName_s.size() > 20){
+                userName_s = userName_s.substr(0, 20);
+            }
+            int score = (int) this->mScore;
+            save(userName_s, score);
+            this->mCurrentStage = MENU;
+        }
+        ImGui::PopItemWidth();
     }
-    ImGui::PopItemWidth();
-
     ImGui::End();
 }
 
