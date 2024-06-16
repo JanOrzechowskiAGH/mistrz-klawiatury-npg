@@ -9,7 +9,7 @@
 #define SetCentered(elemSize) auto xWindow = ImGui::GetWindowSize().x; \
     ImGui::SetCursorPosX((xWindow - elemSize) / 2);
 
-static const char tryby[] = "Czas\0Ilość";
+static const char tryby[] = "Trening\0Zawody";
 
 class GameBase : public ImGuiBase{
 public:

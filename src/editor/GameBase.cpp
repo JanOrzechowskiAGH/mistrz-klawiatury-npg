@@ -2,6 +2,7 @@
 #include "../frazy.h"
 #include "imgui.h"
 #include <chrono>
+#include "../savegame.h"
 
 GameBase * GameBase::sInstance = nullptr;
 
@@ -216,7 +217,10 @@ void GameBase::RenderGameOver() {
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
     if(ImGui::Button("Zapisz")) {
-         
+        std::string userName_s = userName;
+        int score = (int) this->mScore;
+        save(userName_s, score);
+        this->mCurrentStage = MENU;
     }
     ImGui::PopItemWidth();
 
