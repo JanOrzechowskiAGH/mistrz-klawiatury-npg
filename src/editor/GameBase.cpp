@@ -16,7 +16,7 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
     //io.FontGlobalScale = 2.0f;
     ImFontGlyphRangesBuilder builder;
     builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
-    builder.AddText("ąęśćółżźĄĘŚĆÓŁŻŹ");
+    builder.AddText("ąęśćóńłżźĄĘŚĆÓŃŁŻŹ");
     builder.BuildRanges(&ranges);
     io.Fonts->AddFontFromFileTTF("Roboto.ttf", 26.0f, nullptr, ranges.Data);
     memset(this->mBuffer, 0, sizeof(this->mBuffer));
