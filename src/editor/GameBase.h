@@ -8,10 +8,12 @@
 #include <chrono>
 #include "../stats.hpp"
 
-#define SetCentered(elemSize) auto xWindow = ImGui::GetWindowSize().x; \
-    ImGui::SetCursorPosX((xWindow - elemSize) / 2);
+#define SetCentered(elemSize) { auto xWindow = ImGui::GetWindowSize().x; \
+    ImGui::SetCursorPosX((xWindow - elemSize) / 2); }
 
-static const char tryby[] = "Trening\0Zawody";
+static const char tryby[] = "Trening\0Zawody\0";
+static const char fontNames[] = "Roboto\0Comic\0Fjalla\0Lora\0Playwrite\0";
+static const char colorNames[] = "Czerwony\0Zielony\0Niebieski\0Ciemny\0Jasny\0";
 
 class GameBase : public ImGuiBase{
 public:
@@ -25,7 +27,8 @@ public:
         LOADING,
         INGAME,
         GAME_OVER,
-        STATS
+        STATS,
+        SETTINGS,
     };
     enum GameMode {
         TIME,
@@ -61,8 +64,9 @@ private:
     void UpdateGame();
     void RenderGame();
     void RenderGameOver();
-    void NextWord();
+    void RenderSettings();
     void RenderStats();
+    void NextWord();
 
     const int requiredScore = 10;
     const long long timeModeTime = 20000; //ms
@@ -93,16 +97,16 @@ private:
     long long mTimeLeft;
 
     std::vector<ImFont*> mFonts;
+    int mCurrentFont = 0;
     std::map<Color, ImVec4> mColorValues = {
-            {RED, {255.0f, 0.0f, 0.0f, 1.0f}},
-            {GREEN, {0.0f, 255.0f, 0.0f, 1.0f}},
-            {BLUE, {0.0f, 0.0f, 255.0f, 1.0f}},
-            {DARK, {1.0f, 1.0f, 1.0f, 1.0f}},
-            {LIGHT, {255.0f, 255.0f, 255.0f, 1.0f}},
+            {RED, {1.0f, 0.0f, 0.0f, 1.0f}},
+            {GREEN, {0.0f, 1.0f, 0.0f, 1.0f}},
+            {BLUE, {0.0f, 0.0f, 1.0f, 1.0f}},
+            {DARK, {0.1f, 0.1f, 0.1f, 1.0f}},
+            {LIGHT, {1.0f, 1.0f, 1.0f, 1.0f}},
     };
-    Color mCurrentColor = RED;
-
     float mMoney;
+    Color mCurrentColor = DARK;
 };
 
 #endif //UIEDITOR_EDITORBASE_H
