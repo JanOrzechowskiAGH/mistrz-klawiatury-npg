@@ -430,7 +430,7 @@ void GameBase::RenderStats() {
         std::vector<std::string> user_text = { user.getUsername(),
                                           std::to_string(user.getGameCount()),
                                           std::to_string(user.getHighScore()),
-                                          std::to_string(user.getAvgScore())};
+                                          std::to_string(user.getAvgScore()).substr(0, 4)};
         for (int i = 0; i < 4; ++i) {
             ImGui::SetCursorPosY( cursor);
             ImGui::SetCursorPosX(  ((windowSize.x/16) + (i*windowSize.x/4) + 30 ) );

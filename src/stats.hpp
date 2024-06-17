@@ -21,7 +21,7 @@ public:
     std::vector<int> getScore() const { return score_; }
     int getGameCount() const {return games_;}
     int getHighScore() const;
-    int getAvgScore() const;
+    float getAvgScore() const;
 
 private:
     std::string username_;

@@ -4,12 +4,12 @@
 #include <sstream>
 #include <algorithm>
 
-int StatsEntry::getAvgScore() const {
-    int sum = 0;
+float StatsEntry::getAvgScore() const {
+    float sum = 0;
     for (auto i: score_){
         sum += i;
     }
-    return games_>0 ? sum/games_ : 0;
+    return games_>0 ? sum/(float)games_ : 0;
 }
 
 int StatsEntry::getHighScore() const {
