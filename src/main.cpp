@@ -1,7 +1,6 @@
 #include <iostream>
 #include "ImGuiBase.h"
 #include "editor/GameBase.h"
-#include "style.hpp"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <vector>

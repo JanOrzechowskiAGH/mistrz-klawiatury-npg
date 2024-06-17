@@ -7,7 +7,6 @@
 #include <string>
 #include <sstream>
 #include <chrono>
-#include "../style.hpp"
 
 GameBase * GameBase::sInstance = nullptr;
 

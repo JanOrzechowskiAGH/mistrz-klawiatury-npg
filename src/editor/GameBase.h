@@ -2,11 +2,11 @@
 #define UIEDITOR_EDITORBASE_H
 
 #include "../ImGuiBase.h"
-#include "../style.hpp"
 #include <iostream>
 #include <random>
 #include <chrono>
 #include "../stats.hpp"
+#include <map>
 
 #define SetCentered(elemSize) { auto xWindow = ImGui::GetWindowSize().x; \
     ImGui::SetCursorPosX((xWindow - elemSize) / 2); }
