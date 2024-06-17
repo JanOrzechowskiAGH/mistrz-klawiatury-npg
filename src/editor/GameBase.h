@@ -31,6 +31,14 @@ public:
         TIME,
         SCORE,
     };
+
+    enum Color {
+        RED,
+        GREEN,
+        BLUE,
+        DARK,
+        LIGHT
+    };
     
     GameBase() : mCurrentDifficulty(DIFF_EASY), mCurrentStage(MENU), mCurrentIndex(0), mReset(false), mGameMode(TIME), mTimeLeft(0) {}
 
@@ -42,7 +50,7 @@ public:
     void SetDifficulty(Difficulty difficulty) { this->mCurrentDifficulty = difficulty; }
     void LoadGame();
 
-
+    ImVec4 GetCurrentColorValue() { return mColorValues[this->mCurrentColor]; }
 private:
     void RenderMainBar();
     void RenderViewPort();
@@ -82,6 +90,14 @@ private:
     long long mTimeLeft;
 
     std::vector<ImFont*> mFonts;
+    std::map<Color, ImVec4> mColorValues = {
+            {RED, {255.0f, 0.0f, 0.0f, 1.0f}},
+            {GREEN, {0.0f, 255.0f, 0.0f, 1.0f}},
+            {BLUE, {0.0f, 0.0f, 255.0f, 1.0f}},
+            {DARK, {1.0f, 1.0f, 1.0f, 1.0f}},
+            {LIGHT, {255.0f, 255.0f, 255.0f, 1.0f}},
+    };
+    Color mCurrentColor = RED;
 };
 
 #endif //UIEDITOR_EDITORBASE_H

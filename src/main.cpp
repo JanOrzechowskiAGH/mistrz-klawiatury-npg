@@ -28,11 +28,11 @@ int main() {
 
     GameBase myimgui;
     myimgui.Init(window, glsl_version);
-
+    ImVec4 CurrentColorValue;
     while (!glfwWindowShouldClose(window)) {
-
+        CurrentColorValue = myimgui.GetCurrentColorValue();
         glfwPollEvents();
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(CurrentColorValue.x, CurrentColorValue.y, CurrentColorValue.z, CurrentColorValue.w);
         glClear(GL_COLOR_BUFFER_BIT);
         myimgui.NewFrame();
         myimgui.Update();
