@@ -25,8 +25,6 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
     builder.BuildRanges(&ranges);
     //ImGui::GetStyle().ScaleAllSizes(2.0f);
 
-    io.IniFilename = NULL;
-    io.LogFilename = NULL;
     ImFont* Roboto = io.Fonts->AddFontFromFileTTF("Roboto.ttf", 28.0f, nullptr, ranges.Data);
     ImFont* Comic = io.Fonts->AddFontFromFileTTF("Comic.ttf", 28.0f, nullptr, ranges.Data);
     ImFont* Fjalla = io.Fonts->AddFontFromFileTTF("Fjalla.ttf", 28.0f, nullptr, ranges.Data);
@@ -311,6 +309,7 @@ void GameBase::Setup(std::vector<std::string> &stringDict, ...) {
     this->mDictSize = stringDict.size();
     this->mCurrentDict = std::vector<std::string>(this->mDictSize);
     this->mReset = true;
+    memset(this->mBuffer, 0, sizeof(this->mBuffer));
     for(int i = 0; i < this->mDictSize; i++){
         this->mCurrentDict[i] = stringDict[i];
     }
@@ -343,6 +342,8 @@ void GameBase::LoadGame() {
     this->mCurrentWord = this->mCurrentDict[this->mCurrentIndex];
 }
 
+
+static const char opcje_sort[] = "Liczba gier\0Najwyższy wynik\0Średni Wynik\0";
 // Pierwszy raz to robiłem więc sprawdźcie to ale chyba działa
 void GameBase::RenderStats() {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
@@ -359,7 +360,6 @@ void GameBase::RenderStats() {
     TextCentered("Statystyki");
 
     TextCentered("Sortuj po:");
-    static const char opcje_sort[] = "Liczba gier\0Najwyższy wynik\0Średni wynik";
     ImGui::SetCursorPosX(  (windowSize.x/5) );
     ImGui::Combo("##sortowanie", (int*)&this -> mComp, opcje_sort);
 
