@@ -12,8 +12,12 @@
     ImGui::SetCursorPosX((xWindow - elemSize) / 2); }
 
 static const char tryby[] = "Trening\0Zawody\0";
-static const char fontNames[] = "Roboto\0Comic\0Fjalla\0Lora\0Playwrite\0";
-static const char colorNames[] = "Czerwony\0Zielony\0Niebieski\0Ciemny\0Jasny\0";
+
+static const char* fontNames[] = {"Roboto", "Comic", "Fjalla", "Lora", "Playwrite" };
+static const float fontPrices[] = {0, 50, 40, 30, 20};
+
+static const char* colorNames[] = {"Czerwony", "Zielony", "Niebieski", "Ciemny", "Jasny"};
+static const float colorPrices[] = {30, 30, 30, 0, 20};
 
 class GameBase : public ImGuiBase{
 public:
@@ -100,6 +104,7 @@ private:
 
     std::vector<ImFont*> mFonts;
     int mCurrentFont = 0;
+    int mLastFont = 0;
     std::map<Color, ImVec4> mColorValues = {
             {RED, {1.0f, 0.0f, 0.0f, 1.0f}},
             {GREEN, {0.0f, 1.0f, 0.0f, 1.0f}},
@@ -109,7 +114,8 @@ private:
     };
     float mMoney = 100;
     Color mCurrentColor = DARK;
-    std::vector<bool> mIfUnlockedColor = {true, false, false, false, false};
+    Color mLastColor = DARK;
+    std::vector<bool> mIfUnlockedColor = {false, false, false, true, false};
     std::vector<bool> mIfUnlockedFont = {true, false, false, false, false};
 };
 

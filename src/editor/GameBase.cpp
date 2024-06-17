@@ -121,18 +121,61 @@ void GameBase::RenderSettings() {
         this->mCurrentStage = MENU;
     }
 
+    std::vector<std::string> fontNamesWithPrices;
+    for(int i = 0; i < 5; i++) {
+        char temp[0x100];
+        snprintf(temp, 0x100,"%s (%.2f)", fontNames[i], fontPrices[i]);
+        fontNamesWithPrices.emplace_back(this->mIfUnlockedFont[i] ? fontNames[i] : temp);
+    }
+
+    const char* charNames[5];
+    for(int i = 0; i < 5; i++){
+        charNames[i] = fontNamesWithPrices[i].c_str();
+    }
+
+    std::vector<std::string> colorNamesWithPrices;
+    for(int i = 0; i < 5; i++) {
+        char temp[0x100];
+        snprintf(temp, 0x100,"%s (%.2f)", colorNames[i], colorPrices[i]);
+        colorNamesWithPrices.emplace_back(this->mIfUnlockedColor[i] ? colorNames[i] : temp);
+    }
+
+    const char* charColorNames[5];
+    for(int i = 0; i < 5; i++){
+        charColorNames[i] = colorNamesWithPrices[i].c_str();
+    }
+
     auto windowSize = ImGui::GetWindowSize();
     ImGui::SetCursorPosY(windowSize.y / 3 - 25.0f);
     TextCentered("Pieniążki: %0.2f$", this->mMoney);
     ImGui::SetCursorPosY(windowSize.y / 3);
-    TextCentered("Ustawienia");
+    TextCentered("Sklep");
     SetCentered(630.0f);
     ImGui::PushItemWidth(600.0f);
-    ImGui::Combo("Czcionka", &this->mCurrentFont, fontNames);
+    ImGui::Combo("Czcionka", &this->mCurrentFont, charNames, 5);
     SetCentered(630.0f);
-    ImGui::Combo("Kolor", (int*)&this->mCurrentColor, colorNames);
+    ImGui::Combo("Kolor", (int*)&this->mCurrentColor, charColorNames, 5);
     ImGui::PopItemWidth();
 
+    if(!this->mIfUnlockedFont[this->mCurrentFont]){
+        if(this->mMoney >= fontPrices[this->mCurrentFont]){
+            this->mIfUnlockedFont[this->mCurrentFont] = true;
+            this->SpendMoney(fontPrices[this->mCurrentFont]);
+        }
+        else
+            this->mCurrentFont = this->mLastFont;
+    }
+    this->mLastFont = this->mCurrentFont;
+
+    if(!this->mIfUnlockedColor[this->mCurrentColor]){
+        if(this->mMoney >= colorPrices[this->mCurrentColor]){
+            this->mIfUnlockedColor[this->mCurrentColor] = true;
+            this->SpendMoney(colorPrices[this->mCurrentColor]);
+        }
+        else
+            this->mCurrentColor = this->mLastColor;
+    }
+    this->mLastColor = this->mCurrentColor;
     ImGui::End();
 };
 
@@ -217,7 +260,7 @@ void GameBase::RenderMenu() {
     
     ImGui::Begin("Test", nullptr, baseWindowFlags);
     auto windowSize = ImGui::GetWindowSize();
-    if(ImGui::Button("Ustawienia")){
+    if(ImGui::Button("Sklep")){
         this->mCurrentStage = SETTINGS;
     }
 
@@ -366,7 +409,7 @@ void GameBase::RenderStats() {
 
     TextCentered("Sortuj po:");
     ImGui::SetCursorPosX(  (windowSize.x/5) );
-    ImGui::Combo("##sortowanie", (int*)&this -> mComp, opcje_sort);
+    ImGui::Combo("##sortowanie", (int*)&this->mComp, opcje_sort);
 
     cursor = 3*windowSize.y / 9;
     ImGui::SetCursorPosY( cursor );
@@ -406,11 +449,9 @@ float GameBase::AddMoneyAfterGame(){
     float AddedMoney;
     if(this->mGameMode == SCORE){
         AddedMoney = (float) this->mScore * (float) (this->mCurrentDifficulty + 1);
-        this->mMoney += AddedMoney;
-        return AddedMoney;
     } else{
         AddedMoney = (float) this->mCurrentTime/10000.0f * (float) (this->mCurrentDifficulty + 1);
-        this->mMoney += AddedMoney;
-        return AddedMoney;
     }
+    this->mMoney += AddedMoney;
+    return AddedMoney;
 }
