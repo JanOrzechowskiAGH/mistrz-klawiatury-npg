@@ -136,10 +136,6 @@ void GameBase::RenderGame() {
 
     ImVec2 buttonSize = ImVec2(200, 50);
     ImVec2 buttonPos = ImVec2(center.x - buttonSize.x / 2, center.y + windowSize.y / 4 - buttonSize.y / 16); // Poprawiony buttonPos
-    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsMouseHoveringRect(buttonPos, ImVec2(buttonPos.x + buttonSize.x, buttonPos.y + buttonSize.y))) {
-        this->LoadGame();
-    }
-
     ImGui::SetCursorPos(buttonPos);
     if (ImGui::Button("Reset", buttonSize)) {
         this->LoadGame();
@@ -213,11 +209,12 @@ void GameBase::RenderMenu() {
 
     ImGui::SetCursorPosY(2*windowSize.y/3);
     ImGui::SetCursorPosX((windowSize.x - buttonSize.x - 30) / 2);
-    if (ImGui::Button("Stats", buttonSize)){
+    if (ImGui::Button("Statystyki", buttonSize)){
         this -> mCurrentStage = STATS;
     }
     ImGui::End();
 }
+
 char userName[0x100];
 void GameBase::RenderGameOver() {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
