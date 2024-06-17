@@ -8,7 +8,6 @@ set(SOURCE_FILES
         src/savegame.cpp
         src/ImGuiBase.h
         src/ImGuiBase.cpp
-        src/style.cpp
         src/editor/GameBase.h
         src/editor/GameBase.cpp
 )
@@ -18,7 +17,6 @@ add_executable(NPG src/main.cpp
         src/stats.hpp
         src/stats.cpp
         src/frazy.h
-        src/style.hpp
 
 )
 
