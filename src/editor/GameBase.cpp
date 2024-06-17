@@ -1,11 +1,13 @@
 #include "GameBase.h"
 #include "../frazy.h"
+
 #include "imgui.h"
-#include <chrono>
 #include "../savegame.h"
 #include "../stats.hpp"
 #include <string>
 #include <sstream>
+#include <chrono>
+#include "../style.hpp"
 
 GameBase * GameBase::sInstance = nullptr;
 
@@ -14,19 +16,25 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
     if(sInstance != nullptr) throw ("Another instance of GameBase already exists!");
     ImGuiBase::Init(window, glsl_version);
     sInstance = this;
-
+    //io.FontGlobalScale = 2.0f;a
     ImGuiIO& io = ImGui::GetIO();
     //io.FontGlobalScale = 2.0f;
     ImFontGlyphRangesBuilder builder;
     builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
     builder.AddText("ąęśćóńłżźĄĘŚĆÓŃŁŻŹ");
     builder.BuildRanges(&ranges);
-    io.Fonts->AddFontFromFileTTF("Roboto.ttf", 26.0f, nullptr, ranges.Data);
-    memset(this->mBuffer, 0, sizeof(this->mBuffer));
     //ImGui::GetStyle().ScaleAllSizes(2.0f);
 
     io.IniFilename = NULL;
     io.LogFilename = NULL;
+    ImFont* Roboto = io.Fonts->AddFontFromFileTTF("Roboto.ttf", 32.0f);
+    ImFont* Comic = io.Fonts->AddFontFromFileTTF("Comic.ttf", 32.0f);
+    ImFont* Fjalla = io.Fonts->AddFontFromFileTTF("Fjalla.ttf", 32.0f);
+    ImFont* Lora = io.Fonts->AddFontFromFileTTF("Lora.ttf", 32.0f);
+    ImFont* Playwrite = io.Fonts->AddFontFromFileTTF("Playwrite.ttf", 32.0f);
+    mFonts = {Roboto, Comic, Playwrite, Fjalla, Lora};
+    memset(this->mBuffer, 0, sizeof(this->mBuffer));
+    //ImGui::GetStyle().ScaleAllSizes(2.0f);
 }
 
 
@@ -94,9 +102,10 @@ void TextCentered(const char* fmt, ...){
     vsnprintf(buffer, sizeof(buffer), fmt, args);
 
     auto textSize = ImGui::CalcTextSize(buffer).x;
-
     SetCentered(textSize);
+    //ImGui::PushFont(curr_style.get_curr_font_style());
     ImGui::Text(buffer);
+    //ImGui::PopFont();
     va_end(args);
 }
 bool test = true;
@@ -182,6 +191,7 @@ void GameBase::RenderMenu() {
     ImGui::Begin("Test", nullptr, baseWindowFlags);
     auto windowSize = ImGui::GetWindowSize();
     ImGui::SetCursorPosY(windowSize.y / 3);
+
     ImFont* font = ImGui::GetFont();
     TextCentered("Mistrz Klawiatury");
 
@@ -193,16 +203,16 @@ void GameBase::RenderMenu() {
     ImGui::PopItemWidth();
     ImVec2 buttonSize = {180.0f / 1280.0f * windowSize.x, 60.0f / 720.0f * windowSize.y};
     auto cursor = (windowSize.x - 3 * (buttonSize.x + 30)) / 2;
-
-
     ImGui::SetCursorPosY( 5*windowSize.y / 9);
     for(int i = 0; i < 3; i++)
     {
         ImGui::SetCursorPosX(cursor);
+        //ImGui::PushFont(style.get_curr_font_style());
         if(ImGui::Button(difficultyLabels[i], buttonSize)){
             this->SetDifficulty((Difficulty)i);
             this->LoadGame();
         }
+        //ImGui::PopFont();
         if(i < 2) ImGui::SameLine();
         cursor += buttonSize.x + 30;
     }

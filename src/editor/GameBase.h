@@ -2,6 +2,7 @@
 #define UIEDITOR_EDITORBASE_H
 
 #include "../ImGuiBase.h"
+#include "../style.hpp"
 #include <iostream>
 #include <random>
 #include <chrono>
@@ -79,6 +80,8 @@ private:
     bool mReset2 = false;
     uint32_t mScore;
     long long mTimeLeft;
+
+    std::vector<ImFont*> mFonts;
 };
 
 #endif //UIEDITOR_EDITORBASE_H

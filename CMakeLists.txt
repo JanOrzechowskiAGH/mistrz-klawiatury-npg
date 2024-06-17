@@ -8,6 +8,7 @@ set(SOURCE_FILES
         src/savegame.cpp
         src/ImGuiBase.h
         src/ImGuiBase.cpp
+        src/style.cpp
         src/editor/GameBase.h
         src/editor/GameBase.cpp
 )
@@ -17,6 +18,7 @@ add_executable(NPG src/main.cpp
         src/stats.hpp
         src/stats.cpp
         src/frazy.h
+        src/style.hpp
 
 )
 
@@ -43,5 +45,13 @@ target_link_libraries(NPG__test PRIVATE glad::glad)
 target_link_libraries(NPG__test PRIVATE glfw)
 target_link_libraries(NPG__test PRIVATE imgui::imgui)
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Roboto.ttf
+file(COPY fonts/Roboto.ttf
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY fonts/Comic.ttf
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY fonts/Fjalla.ttf
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY fonts/Playwrite.ttf
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY fonts/Lora.ttf
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

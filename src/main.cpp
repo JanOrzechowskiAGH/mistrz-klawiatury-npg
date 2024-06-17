@@ -1,9 +1,10 @@
 #include <iostream>
 #include "ImGuiBase.h"
 #include "editor/GameBase.h"
+#include "style.hpp"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include <vector>
 int main() {
     if (!glfwInit())
         return 1;
@@ -29,10 +30,10 @@ int main() {
     myimgui.Init(window, glsl_version);
 
     while (!glfwWindowShouldClose(window)) {
+
         glfwPollEvents();
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
         myimgui.NewFrame();
         myimgui.Update();
         myimgui.Render();
