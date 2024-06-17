@@ -27,11 +27,11 @@ void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
 
     io.IniFilename = NULL;
     io.LogFilename = NULL;
-    ImFont* Roboto = io.Fonts->AddFontFromFileTTF("Roboto.ttf", 32.0f);
-    ImFont* Comic = io.Fonts->AddFontFromFileTTF("Comic.ttf", 32.0f);
-    ImFont* Fjalla = io.Fonts->AddFontFromFileTTF("Fjalla.ttf", 32.0f);
-    ImFont* Lora = io.Fonts->AddFontFromFileTTF("Lora.ttf", 32.0f);
-    ImFont* Playwrite = io.Fonts->AddFontFromFileTTF("Playwrite.ttf", 32.0f);
+    ImFont* Roboto = io.Fonts->AddFontFromFileTTF("Roboto.ttf", 28.0f, nullptr, ranges.Data);
+    ImFont* Comic = io.Fonts->AddFontFromFileTTF("Comic.ttf", 28.0f, nullptr, ranges.Data);
+    ImFont* Fjalla = io.Fonts->AddFontFromFileTTF("Fjalla.ttf", 28.0f, nullptr, ranges.Data);
+    ImFont* Lora = io.Fonts->AddFontFromFileTTF("Lora.ttf", 28.0f, nullptr, ranges.Data);
+    ImFont* Playwrite = io.Fonts->AddFontFromFileTTF("Playwrite.ttf", 28.0f, nullptr, ranges.Data);
     mFonts = {Roboto, Comic, Playwrite, Fjalla, Lora};
     memset(this->mBuffer, 0, sizeof(this->mBuffer));
     //ImGui::GetStyle().ScaleAllSizes(2.0f);
@@ -57,17 +57,17 @@ void GameBase::RenderViewPort() {
 
     ImGuiWindowFlags rootWindowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove;
     rootWindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
-/*
-    ImGui::Begin("Root", nullptr, rootWindowFlags);
-    //DockSpace
-    ImGuiIO& io = ImGui::GetIO();
-    if(io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
-        ImGuiID dockspace_id = ImGui::GetID("Root");
-        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+
+    ImFont* font = this->mFonts[this->mCurrentFont];
+    ImGui::PushFont(font);
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+    if(this->mCurrentColor == RED || this->mCurrentColor == LIGHT){
+        style.Colors[ImGuiCol_Text] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+        
     }
 
-    ImGui::End(); //Root
-    */
     switch(this->mCurrentStage){
         case MENU:
             RenderMenu();
@@ -82,9 +82,13 @@ void GameBase::RenderViewPort() {
         case STATS:
             RenderStats();
             break;
+        case SETTINGS:
+            RenderSettings();
+            break;
         default:
             break;
     }
+    ImGui::PopFont();
 
 }
 
@@ -109,6 +113,29 @@ void TextCentered(const char* fmt, ...){
     va_end(args);
 }
 bool test = true;
+
+void GameBase::RenderSettings() {
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f,0.5f));
+    ImGui::Begin("Settings", nullptr, baseWindowFlags);
+
+    if(ImGui::Button("Wyjdź")){
+        this->mCurrentStage = MENU;
+    }
+
+    auto windowSize = ImGui::GetWindowSize();
+    ImGui::SetCursorPosY(windowSize.y / 3);
+
+    TextCentered("Ustawienia");
+    SetCentered(630.0f);
+    ImGui::PushItemWidth(600.0f);
+    ImGui::Combo("Czcionka", &this->mCurrentFont, fontNames);
+    SetCentered(630.0f);
+    ImGui::Combo("Kolor", (int*)&this->mCurrentColor, colorNames);
+    ImGui::PopItemWidth();
+
+    ImGui::End();
+};
 
 void GameBase::RenderGame() {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
@@ -188,8 +215,13 @@ void GameBase::NextWord() {
 void GameBase::RenderMenu() {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f,0.5f));
+    
     ImGui::Begin("Test", nullptr, baseWindowFlags);
     auto windowSize = ImGui::GetWindowSize();
+    if(ImGui::Button("Ustawienia")){
+        this->mCurrentStage = SETTINGS;
+    }
+
     ImGui::SetCursorPosY(windowSize.y / 3);
 
     ImFont* font = ImGui::GetFont();
@@ -276,7 +308,7 @@ void GameBase::Setup(std::vector<std::string> &stringDict, ...) {
     this->mCurrentIndex = 0;
     this->mDictSize = stringDict.size();
     this->mCurrentDict = std::vector<std::string>(this->mDictSize);
-
+    this->mReset = true;
     for(int i = 0; i < this->mDictSize; i++){
         this->mCurrentDict[i] = stringDict[i];
     }
