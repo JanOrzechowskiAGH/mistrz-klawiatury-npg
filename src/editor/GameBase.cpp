@@ -233,7 +233,9 @@ void GameBase::RenderGameOver() {
     auto windowSize = ImGui::GetWindowSize();
     ImGui::SetCursorPosY(windowSize.y / 3);
     TextCentered("Koniec gry!");
-
+    float AddedMoney = AddMoneyAfterGame();
+    ImGui::SetCursorPosY(7*windowSize.y / 9);
+    TextCentered("Zdobyte pieniążki: %.2f$", (AddedMoney));
     if(this->mGameMode == TIME){
         ImGui::SetCursorPosY( 4*windowSize.y / 9);
         TextCentered("Czas: %.3f", (this->mCurrentTime/1000.0f));
@@ -361,4 +363,17 @@ void GameBase::RenderStats() {
 
 
     ImGui::End();
+}
+
+float GameBase::AddMoneyAfterGame(){
+    float AddedMoney;
+    if(this->mGameMode == SCORE){
+        AddedMoney = (float) this->mScore * (float) (this->mCurrentDifficulty + 1);
+        this->mMoney += AddedMoney;
+        return AddedMoney;
+    } else{
+        AddedMoney = (float) this->mCurrentTime/10000.0f * (float) (this->mCurrentDifficulty + 1);
+        this->mMoney += AddedMoney;
+        return AddedMoney;
+    }
 }

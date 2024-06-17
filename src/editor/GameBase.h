@@ -51,6 +51,9 @@ public:
     void LoadGame();
 
     ImVec4 GetCurrentColorValue() { return mColorValues[this->mCurrentColor]; }
+
+    float AddMoneyAfterGame();
+    void SpendMoney(float SpentMoney) { this->mMoney -= SpentMoney; };
 private:
     void RenderMainBar();
     void RenderViewPort();
@@ -98,6 +101,8 @@ private:
             {LIGHT, {255.0f, 255.0f, 255.0f, 1.0f}},
     };
     Color mCurrentColor = RED;
+
+    float mMoney;
 };
 
 #endif //UIEDITOR_EDITORBASE_H
