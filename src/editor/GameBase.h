@@ -57,6 +57,8 @@ public:
 
     float AddMoneyAfterGame();
     void SpendMoney(float SpentMoney) { this->mMoney -= SpentMoney; };
+    void UnlockColor(std::size_t ColorIndex) { this->mIfUnlockedColor[ColorIndex] = true; }
+    void UnlockFont(std::size_t FontIndex) { this->mIfUnlockedFont[FontIndex] = true; }
 private:
     void RenderMainBar();
     void RenderViewPort();
@@ -105,8 +107,10 @@ private:
             {DARK, {0.1f, 0.1f, 0.1f, 1.0f}},
             {LIGHT, {1.0f, 1.0f, 1.0f, 1.0f}},
     };
-    float mMoney;
+    float mMoney = 100;
     Color mCurrentColor = DARK;
+    std::vector<bool> mIfUnlockedColor = {true, false, false, false, false};
+    std::vector<bool> mIfUnlockedFont = {true, false, false, false, false};
 };
 
 #endif //UIEDITOR_EDITORBASE_H

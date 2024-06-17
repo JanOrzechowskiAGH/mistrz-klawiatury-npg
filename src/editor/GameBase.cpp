@@ -122,8 +122,9 @@ void GameBase::RenderSettings() {
     }
 
     auto windowSize = ImGui::GetWindowSize();
+    ImGui::SetCursorPosY(windowSize.y / 3 - 25.0f);
+    TextCentered("Pieniążki: %0.2f$", this->mMoney);
     ImGui::SetCursorPosY(windowSize.y / 3);
-
     TextCentered("Ustawienia");
     SetCentered(630.0f);
     ImGui::PushItemWidth(600.0f);
@@ -252,6 +253,10 @@ void GameBase::RenderMenu() {
     if (ImGui::Button("Statystyki", buttonSize)){
         this -> mCurrentStage = STATS;
     }
+
+    ImGui::SetCursorPosY(45.0f);
+    ImGui::SetCursorPosX(10.0f);
+    ImGui::Text("Pieniążki: %0.2f$", this->mMoney);
     ImGui::End();
 }
 
