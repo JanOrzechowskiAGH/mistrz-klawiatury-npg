@@ -63,6 +63,8 @@ public:
     void SpendMoney(float SpentMoney) { this->mMoney -= SpentMoney; };
     void UnlockColor(std::size_t ColorIndex) { this->mIfUnlockedColor[ColorIndex] = true; }
     void UnlockFont(std::size_t FontIndex) { this->mIfUnlockedFont[FontIndex] = true; }
+    void SaveMoney();
+    void LoadMoney();
 private:
     void RenderMainBar();
     void RenderViewPort();
@@ -112,10 +114,10 @@ private:
             {DARK, {0.1f, 0.1f, 0.1f, 1.0f}},
             {LIGHT, {1.0f, 1.0f, 1.0f, 1.0f}},
     };
-    float mMoney = 100;
+    float mMoney = 0;
     Color mCurrentColor = DARK;
     Color mLastColor = DARK;
-    std::vector<bool> mIfUnlockedColor = {false, false, false, true, false};
+    std::vector<bool> mIfUnlockedColor = {true, false, false, false, false};
     std::vector<bool> mIfUnlockedFont = {true, false, false, false, false};
 };
 

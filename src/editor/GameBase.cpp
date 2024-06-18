@@ -7,6 +7,8 @@
 #include <string>
 #include <sstream>
 #include <chrono>
+#include <fstream>
+#include <filesystem>
 
 GameBase * GameBase::sInstance = nullptr;
 
@@ -453,4 +455,51 @@ float GameBase::AddMoneyAfterGame(){
     }
     this->mMoney += AddedMoney;
     return AddedMoney;
+}
+
+void GameBase::SaveMoney() {
+    std::string path = "../MoneySave";
+    std::ofstream file_out;
+    file_out.open(path);
+    file_out << this->mMoney << "\n";
+    file_out << this->mIfUnlockedFont[0] << "\n";
+    file_out << this->mIfUnlockedFont[1] << "\n";
+    file_out << this->mIfUnlockedFont[2] << "\n";
+    file_out << this->mIfUnlockedFont[3] << "\n";
+    file_out << this->mIfUnlockedFont[4] << "\n";
+    file_out << this->mIfUnlockedColor[0] << "\n";
+    file_out << this->mIfUnlockedColor[1] << "\n";
+    file_out << this->mIfUnlockedColor[2] << "\n";
+    file_out << this->mIfUnlockedColor[3] << "\n";
+    file_out << this->mIfUnlockedColor[4] << "\n";
+    file_out << this->mCurrentColor << "\n";
+    file_out << this->mCurrentFont << "\n";
+    file_out.close();
+}
+
+void GameBase::LoadMoney() {
+    std::ifstream myfile("../MoneySave");
+
+    myfile >> this->mMoney;
+
+    bool LoadedBool;
+    for(std::size_t i = 0; i < 5; i ++){
+        myfile >> LoadedBool;
+        mIfUnlockedFont[i] = LoadedBool;
+    }
+    for(std::size_t i = 0; i < 5; i ++) {
+        myfile >> LoadedBool;
+        mIfUnlockedColor[i] = LoadedBool;
+    }
+
+    int LoadedColor;
+    myfile >> LoadedColor;
+    this -> mCurrentColor = (Color) LoadedColor;
+    this -> mLastColor = (Color) LoadedColor;
+
+    int LoadedFont;
+    myfile >> LoadedFont;
+    this -> mCurrentFont = LoadedFont;
+    this -> mLastFont = LoadedFont;
+    myfile.close();
 }

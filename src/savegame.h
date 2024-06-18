@@ -2,7 +2,6 @@
 #define SAVEGAME_H
 #include <cstdlib>
 #include <string>
-#include <string>
 #include <vector>
 #include <fstream>
 

@@ -27,6 +27,7 @@ int main() {
 
     GameBase myimgui;
     myimgui.Init(window, glsl_version);
+    myimgui.LoadMoney();
     ImVec4 CurrentColorValue;
     while (!glfwWindowShouldClose(window)) {
         CurrentColorValue = myimgui.GetCurrentColorValue();
@@ -38,6 +39,7 @@ int main() {
         myimgui.Render();
         glfwSwapBuffers(window);
     }
+    myimgui.SaveMoney();
     myimgui.Shutdown();
 
     return EXIT_SUCCESS;
