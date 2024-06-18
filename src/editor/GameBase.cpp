@@ -11,7 +11,6 @@
 #include <filesystem>
 
 GameBase * GameBase::sInstance = nullptr;
-
 ImVector<ImWchar> ranges;
 void GameBase::Init(GLFWwindow *window, const char *glsl_version) {
     if(sInstance != nullptr) throw ("Another instance of GameBase already exists!");
@@ -62,8 +61,10 @@ void GameBase::RenderViewPort() {
 
     ImGuiStyle& style = ImGui::GetStyle();
     style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+    style.Colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.93f);
     if(this->mCurrentColor == RED || this->mCurrentColor == LIGHT){
         style.Colors[ImGuiCol_Text] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+        style.Colors[ImGuiCol_PopupBg] = ImVec4(1.0f, 1.0f, 1.0f, 0.9f);
         
     }
 
