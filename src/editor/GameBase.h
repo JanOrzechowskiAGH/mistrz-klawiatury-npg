@@ -114,10 +114,10 @@ private:
             {DARK, {0.1f, 0.1f, 0.1f, 1.0f}},
             {LIGHT, {1.0f, 1.0f, 1.0f, 1.0f}},
     };
-    float mMoney = 0;
+    float mMoney = 100;
     Color mCurrentColor = DARK;
     Color mLastColor = DARK;
-    std::vector<bool> mIfUnlockedColor = {true, false, false, false, false};
+    std::vector<bool> mIfUnlockedColor = {false, false, false, true, false};
     std::vector<bool> mIfUnlockedFont = {true, false, false, false, false};
 };
 

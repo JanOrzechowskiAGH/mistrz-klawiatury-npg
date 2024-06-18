@@ -480,6 +480,9 @@ void GameBase::SaveMoney() {
 void GameBase::LoadMoney() {
     std::ifstream myfile("../MoneySave");
 
+    if(!myfile){
+        return;
+    }
     myfile >> this->mMoney;
 
     bool LoadedBool;
