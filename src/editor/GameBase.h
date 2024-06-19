@@ -119,6 +119,9 @@ private:
     Color mLastColor = DARK;
     std::vector<bool> mIfUnlockedColor = {false, false, false, true, false};
     std::vector<bool> mIfUnlockedFont = {true, false, false, false, false};
+
+    bool mAddMoneyOnce = true;
+    float mAddedMoney = 0;
 };
 
 #endif //UIEDITOR_EDITORBASE_H

@@ -313,9 +313,12 @@ void GameBase::RenderGameOver() {
     auto windowSize = ImGui::GetWindowSize();
     ImGui::SetCursorPosY(windowSize.y / 3);
     TextCentered("Koniec gry!");
-    float AddedMoney = AddMoneyAfterGame();
+    while(this->mAddMoneyOnce){
+        this->mAddedMoney = AddMoneyAfterGame();
+        this->mAddMoneyOnce = false;
+    }
     ImGui::SetCursorPosY(7*windowSize.y / 9);
-    TextCentered("Zdobyte pieniążki: %.2f$", (AddedMoney));
+    TextCentered("Zdobyte pieniążki: %.2f$", (this->mAddedMoney));
     if(this->mGameMode == TIME){
         ImGui::SetCursorPosY( 4*windowSize.y / 9);
         TextCentered("Czas: %.3f", (this->mCurrentTime/1000.0f));
@@ -371,6 +374,7 @@ void GameBase::LoadGame() {
     this->mReset = false;
     this->mScore = 0;
     this->mLastTime = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+    this->mAddMoneyOnce = true;
     switch (this->mCurrentDifficulty) {
         case DIFF_EASY:
             this->Setup(easy_phrases);
@@ -390,6 +394,7 @@ void GameBase::LoadGame() {
 
     this->mCurrentStage = INGAME;
     this->mCurrentWord = this->mCurrentDict[this->mCurrentIndex];
+
 }
 
 
@@ -451,8 +456,6 @@ float GameBase::AddMoneyAfterGame(){
     float AddedMoney;
     if(this->mGameMode == SCORE){
         AddedMoney = (float) this->mScore * (float) (this->mCurrentDifficulty + 1);
-    } else{
-        AddedMoney = (float) this->mCurrentTime/10000.0f * (float) (this->mCurrentDifficulty + 1);
     }
     this->mMoney += AddedMoney;
     return AddedMoney;
